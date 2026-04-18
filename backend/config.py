@@ -16,4 +16,5 @@ FLASK_PORT = int(os.getenv("FLASK_PORT", "3030"))
 FLASK_DEBUG = os.getenv("FLASK_DEBUG", "true").lower() == "true"
 
 # ── CORS ──────────────────────────────────────────────────────────────────
-CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
+_default_origins = "http://localhost:5173,https://quantum-battleship-navy.vercel.app"
+CORS_ORIGINS = os.getenv("CORS_ORIGINS", _default_origins).split(",")

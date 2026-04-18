@@ -13,6 +13,7 @@ eventlet.monkey_patch()
 from flask import Flask
 from flask_cors import CORS
 from flask_socketio import SocketIO
+from werkzeug.middleware.proxy_fix import ProxyFix
 from supabase import create_client, Client
 
 from config import (
@@ -31,6 +32,7 @@ from socket_events import register_events
 # ── Flask App ─────────────────────────────────────────────────────────────
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 app.config["SECRET_KEY"] = FLASK_SECRET
 
 # CORS for the Vite dev server
