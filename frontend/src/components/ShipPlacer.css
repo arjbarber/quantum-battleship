@@ -1,0 +1,201 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   Ship Placer — Placement Phase UI Styles
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.ship-placer {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  padding: 32px;
+  animation: slide-up 0.5s ease forwards;
+}
+
+@media (max-width: 1000px) {
+  .ship-placer {
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    gap: 20px;
+  }
+}
+
+/* ── Sidebar ────────────────────────────────────────────────────────── */
+
+.placer-sidebar {
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.placer-title {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--quantum-purple-vivid), var(--quantum-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.placer-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ── Ship List ──────────────────────────────────────────────────────── */
+
+.ship-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ship-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.ship-item:hover {
+  border-color: var(--quantum-purple);
+  background: var(--bg-surface-hover);
+}
+
+.ship-item-selected {
+  border-color: var(--quantum-purple);
+  background: var(--quantum-purple-dim);
+  box-shadow: 0 0 12px var(--quantum-purple-glow);
+}
+
+.ship-item-placed {
+  opacity: 0.5;
+  cursor: default;
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.ship-item-placed:hover {
+  border-color: rgba(34, 197, 94, 0.3);
+  background: var(--bg-surface);
+}
+
+.ship-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ship-name {
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ship-size {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.ship-cells {
+  display: flex;
+  gap: 2px;
+}
+
+.ship-cell-preview {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--color-ship);
+}
+
+.ship-item-placed .ship-cell-preview {
+  background: #22c55e;
+}
+
+/* ── Placement Controls ─────────────────────────────────────────────── */
+
+.placement-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+}
+
+.placement-mode-toggle {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--bg-primary);
+  border-radius: var(--radius-md);
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.mode-btn-active {
+  color: white;
+}
+
+.mode-btn-classical.mode-btn-active {
+  background: var(--color-ship);
+}
+
+.mode-btn-quantum.mode-btn-active {
+  background: linear-gradient(135deg, var(--quantum-purple), var(--quantum-cyan));
+}
+
+.orientation-btn {
+  padding: 8px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.orientation-btn:hover {
+  border-color: var(--quantum-purple);
+  color: var(--text-primary);
+}
+
+.quantum-instruction {
+  font-size: 0.8rem;
+  color: var(--quantum-cyan);
+  font-style: italic;
+  text-align: center;
+  padding: 8px;
+  background: var(--quantum-cyan-dim);
+  border-radius: var(--radius-sm);
+}
+
+.placer-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

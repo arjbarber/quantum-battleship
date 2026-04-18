@@ -8,4 +8,15 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ],
+  server: {
+    proxy: {
+      '/socket.io': {
+        target: 'http://localhost:3030',
+        ws: true,
+      },
+      '/api': {
+        target: 'http://localhost:3030',
+      },
+    },
+  },
 })
