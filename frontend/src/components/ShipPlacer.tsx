@@ -72,20 +72,6 @@ export default function ShipPlacer({ onPlaceShips, disabled = false }: ShipPlace
   const [superPhase, setSuperPhase] = useState<'a' | 'b'>('a');
   const [superPosA, setSuperPosA] = useState<{ x: number; y: number; orientation: 'horizontal' | 'vertical' } | null>(null);
 
-  // Get all occupied positions from placed ships
-  const occupiedPositions = useMemo(() => {
-    const positions: Set<string> = new Set();
-    for (const ship of placedShips) {
-      const posA = computePositions(ship.x_a, ship.y_a, ship.size, ship.orientation_a);
-      posA.forEach(([x, y]) => positions.add(`${x},${y}`));
-      if (ship.placement_type === 'superposition' && ship.x_b !== undefined && ship.y_b !== undefined) {
-        const posB = computePositions(ship.x_b, ship.y_b, ship.size, ship.orientation_b!);
-        posB.forEach(([x, y]) => positions.add(`${x},${y}`));
-      }
-    }
-    return positions;
-  }, [placedShips]);
-
   // Build grid with placed ships
   const gridCells = useMemo(() => {
     const grid = createEmptyGrid();

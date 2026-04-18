@@ -82,8 +82,6 @@ export default function Grid({
   previewCells = [],
   label,
 }: GridProps) {
-  const [hoveredCell, setHoveredCell] = useState<{ x: number; y: number } | null>(null);
-
   // Build preview map for O(1) lookup
   const previewMap = new Map<string, string>();
   for (const pc of previewCells) {
@@ -91,12 +89,10 @@ export default function Grid({
   }
 
   const handleMouseEnter = (x: number, y: number) => {
-    setHoveredCell({ x, y });
     onCellHover?.(x, y);
   };
 
   const handleMouseLeave = () => {
-    setHoveredCell(null);
     onCellLeave?.();
   };
 

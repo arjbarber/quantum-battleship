@@ -1,5 +1,7 @@
-import { createContext, useContext, useEffect, useRef, useState, useCallback, ReactNode } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react';
+import type { ReactNode } from 'react';
+import { io } from 'socket.io-client';
+import type { Socket } from 'socket.io-client';
 
 // ── Types ────────────────────────────────────────────────────────────────
 
