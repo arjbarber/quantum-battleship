@@ -34,7 +34,6 @@ export default function Lobby({
   return (
     <div className="lobby">
       <div className="lobby-hero">
-        <div className="lobby-emoji">⚛️🚢</div>
         <h1 className="lobby-title">Welcome, {username}</h1>
         <p className="lobby-subtitle">
           Place your fleet in quantum superposition. Fire to collapse the wave function.
