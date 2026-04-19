@@ -134,19 +134,19 @@ export default function ControlPanel({
             </div>
           )}
           {[...moves].reverse().map((move, i) => (
-            <div key={i} className={`move-entry ${resultClass(move.result)}`}>
-              <span className="move-icon">{resultIcon(move.result)}</span>
+            <div key={i} className={`move-entry ${resultClass(move.result === 'quantum_ghost' && move.player === 'you' ? 'miss' : move.result)}`}>
+              <span className="move-icon">{resultIcon(move.result === 'quantum_ghost' && move.player === 'you' ? 'miss' : move.result)}</span>
               <span className="move-coord">{coordLabel(move.x, move.y)}</span>
               <span>
                 {move.player === 'you' ? 'You' : 'Opp'} →{' '}
                 {move.result === 'quantum_ghost'
-                  ? `Ghost (${move.shipName})`
+                  ? (move.player === 'you' ? 'Miss' : `Ghost (${move.shipName})`)
                   : move.result === 'sunk'
                   ? `Sunk ${move.shipName}!`
                   : move.result === 'hit'
                   ? `Hit${move.shipName ? ` ${move.shipName}` : ''}`
                   : 'Miss'}
-                {move.collapsed ? ' ⟨ψ↓⟩' : ''}
+                {move.collapsed && move.player === 'opponent' ? ' ⟨ψ↓⟩' : ''}
               </span>
             </div>
           ))}

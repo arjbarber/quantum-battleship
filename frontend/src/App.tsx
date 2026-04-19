@@ -194,12 +194,10 @@ export default function App() {
       });
 
       // Show result notification
-      if (data.result === 'quantum_ghost') {
-        setLastResult(`👻 Quantum Ghost! ${data.ship_name} collapsed elsewhere`);
-      } else if (data.result === 'sunk') {
+      if (data.result === 'sunk') {
         setLastResult(`☠️ Sunk ${data.ship_name}!`);
       } else if (data.result === 'hit') {
-        setLastResult(`💥 Hit!${data.collapsed ? ' (Wave function collapsed!)' : ''}`);
+        setLastResult(`💥 Hit!`);
       } else {
         setLastResult('🌊 Miss');
       }
