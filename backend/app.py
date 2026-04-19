@@ -1,10 +1,3 @@
-"""
-Quantum Battleship — Flask Application Entry Point
-
-Initializes Flask, CORS, Socket.IO, and Supabase client.
-Registers all WebSocket event handlers and serves on port 3030.
-"""
-
 # eventlet monkey-patch MUST come before all other imports
 # so that httpx (used by Supabase client) works with eventlet sockets
 import eventlet
@@ -14,6 +7,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_socketio import SocketIO
 from werkzeug.middleware.proxy_fix import ProxyFix
+from postgrest.exceptions import APIError
 from supabase import create_client, Client
 
 from config import (
@@ -32,19 +26,25 @@ from socket_events import register_events
 # ── Flask App ─────────────────────────────────────────────────────────────
 
 app = Flask(__name__)
-app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+# x_proto=1: Trust X-Forwarded-Proto (HTTPS)
+# x_for=1: Trust X-Forwarded-For (Client IP)
+# x_host=1: Trust X-Forwarded-Host
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_for=1, x_host=1)
 app.config["SECRET_KEY"] = FLASK_SECRET
 
-# CORS for the Vite dev server
-CORS(app, origins=CORS_ORIGINS)
+# CORS configuration
+CORS(app, origins=CORS_ORIGINS, supports_credentials=True)
 
 # Socket.IO with eventlet for async support
 socketio = SocketIO(
     app,
     cors_allowed_origins=CORS_ORIGINS,
     async_mode="eventlet",
-    logger=False,
-    engineio_logger=False,
+    manage_session=False,
+    logger=True,
+    engineio_logger=True,
+    ping_timeout=60,
+    ping_interval=25
 )
 
 # ── Supabase ──────────────────────────────────────────────────────────────
@@ -144,16 +144,27 @@ def login():
         user_id = auth_response.user.id
 
         # Fetch profile
-        profile = supabase.table("profiles").select("*").eq(
-            "id", user_id
-        ).single().execute()
+        username = ""
+        matches_played = 0
+        matches_won = 0
+        try:
+            profile = supabase.table("profiles").select("*").eq("id", user_id).single().execute()
+            if profile.data:
+                username = profile.data.get("username", "")
+                matches_played = profile.data.get("matches_played", 0)
+                matches_won = profile.data.get("matches_won", 0)
+        except APIError as e:
+            print(f"Profile fetch warning: {e.message}")
+            # Non-fatal error, use defaults
+        except Exception as e:
+            print(f"Unexpected profile error: {e}")
 
         return jsonify({
             "user_id": user_id,
             "email": email,
-            "username": profile.data.get("username", ""),
-            "matches_played": profile.data.get("matches_played", 0),
-            "matches_won": profile.data.get("matches_won", 0),
+            "username": username,
+            "matches_played": matches_played,
+            "matches_won": matches_won,
             "session": {
                 "access_token": auth_response.session.access_token,
                 "refresh_token": auth_response.session.refresh_token,
@@ -161,6 +172,7 @@ def login():
         }), 200
 
     except Exception as e:
+        print(f"Login Error: {e}")
         return jsonify({"error": str(e)}), 500
 
 
