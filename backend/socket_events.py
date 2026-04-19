@@ -198,8 +198,22 @@ def register_events(socketio: SocketIO, game_manager: GameManager, supabase):
 
             if p1_uid and p2_uid:
                 # Update profiles
-                update_player_stats(supabase, p1_uid, won=(winner_id == p1_id))
-                update_player_stats(supabase, p2_uid, won=(winner_id == p2_id))
+                p1_played, p1_won = update_player_stats(supabase, p1_uid, won=(winner_id == p1_id))
+                p2_played, p2_won = update_player_stats(supabase, p2_uid, won=(winner_id == p2_id))
+                
+                # Notify players of their updated stats
+                if p1_played is not None:
+                    socketio.emit("stats_updated", {
+                        "matches_played": p1_played,
+                        "matches_won": p1_won
+                    }, to=p1_id)
+                
+                if p2_played is not None:
+                    socketio.emit("stats_updated", {
+                        "matches_played": p2_played,
+                        "matches_won": p2_won
+                    }, to=p2_id)
+
                 # Update game record
                 complete_game_record(supabase, game.game_id, winner_uid)
 

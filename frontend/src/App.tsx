@@ -61,7 +61,7 @@ const DEFAULT_SHIP_LIST: ShipStatus[] = [
 // ── App ──────────────────────────────────────────────────────────────────
 
 export default function App() {
-  const { user, loading: authLoading, error: authError, login, signup, logout } = useAuth();
+  const { user, loading: authLoading, error: authError, login, signup, logout, updateStats } = useAuth();
   const { connected, socketId, emit, on, off } = useSocket();
 
   const [phase, setPhase] = useState<GamePhase>('login');
@@ -299,6 +299,11 @@ export default function App() {
       }
     };
 
+    const handleStatsUpdated = (data: any) => {
+      console.log('[Auth] Stats updated:', data);
+      updateStats(data.matches_played, data.matches_won);
+    };
+
     const handleGameOver = (data: any) => {
       console.log('[Game] Game over:', data);
       setGame((g) => ({
@@ -331,6 +336,7 @@ export default function App() {
     on('fire_result', handleFireResult);
     on('opponent_fired', handleOpponentFired);
     on('game_over', handleGameOver);
+    on('stats_updated', handleStatsUpdated);
     on('opponent_disconnected', handleOpponentDisconnected);
     on('error', handleError);
 
@@ -342,10 +348,11 @@ export default function App() {
       off('fire_result', handleFireResult);
       off('opponent_fired', handleOpponentFired);
       off('game_over', handleGameOver);
+      off('stats_updated', handleStatsUpdated);
       off('opponent_disconnected', handleOpponentDisconnected);
       off('error', handleError);
     };
-  }, [connected, socketId, on, off, user]);
+  }, [connected, socketId, on, off, user, updateStats]);
 
   // ── Actions ────────────────────────────────────────────────────────────
 

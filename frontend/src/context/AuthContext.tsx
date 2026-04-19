@@ -19,6 +19,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, username: string) => Promise<void>;
   logout: () => void;
+  updateStats: (played: number, won: number) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -48,6 +49,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(u);
     localStorage.setItem('qb_user', JSON.stringify(u));
   };
+
+  const updateStats = useCallback((played: number, won: number) => {
+    setUser(prev => {
+      if (!prev) return null;
+      const updated = { ...prev, matchesPlayed: played, matchesWon: won };
+      localStorage.setItem('qb_user', JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
 
   const login = useCallback(async (email: string, password: string) => {
     setLoading(true);
@@ -111,7 +121,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, error, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, loading, error, login, signup, logout, updateStats }}>
       {children}
     </AuthContext.Provider>
   );
