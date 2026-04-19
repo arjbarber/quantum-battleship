@@ -28,10 +28,7 @@
   font-family: var(--font-heading);
   font-size: 2.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, var(--quantum-purple-vivid), var(--quantum-cyan));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--quantum-purple-vivid);
   margin-bottom: 12px;
 }
 
@@ -88,9 +85,7 @@
   font-size: 1.2rem;
   font-weight: 700;
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--quantum-purple), #6d28d9, var(--quantum-cyan));
-  background-size: 200% 200%;
-  animation: quantum-shimmer 3s ease-in-out infinite;
+  background: var(--quantum-purple);
   color: white;
   border: none;
   cursor: pointer;
@@ -110,18 +105,7 @@
   transform: translateY(0) scale(0.98);
 }
 
-.find-match-btn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1), transparent);
-  transform: translateX(-100%);
-  transition: transform 0.6s ease;
-}
-
-.find-match-btn:hover::after {
-  transform: translateX(100%);
-}
+/* Shimmer removed */
 
 /* ── Rules ──────────────────────────────────────────────────────────── */
 

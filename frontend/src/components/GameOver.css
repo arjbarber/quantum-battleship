@@ -47,10 +47,7 @@
 }
 
 .game-over-win .game-over-title {
-  background: linear-gradient(135deg, var(--quantum-purple-vivid), var(--quantum-cyan));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--quantum-purple-vivid);
 }
 
 .game-over-loss .game-over-title {

@@ -124,7 +124,7 @@
 }
 
 .tracker-cell-quantum {
-  background: linear-gradient(135deg, var(--quantum-purple-dim), var(--quantum-cyan-dim));
+  background: var(--quantum-purple-dim);
   border-color: var(--quantum-purple);
   animation: quantum-shimmer 2s ease-in-out infinite;
   background-size: 200% 200%;

@@ -32,10 +32,7 @@
   font-family: var(--font-heading);
   font-size: 1.4rem;
   font-weight: 700;
-  background: linear-gradient(135deg, var(--quantum-purple-vivid), var(--quantum-cyan));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--quantum-purple-vivid);
 }
 
 .placer-subtitle {
@@ -164,7 +161,7 @@
 }
 
 .mode-btn-quantum.mode-btn-active {
-  background: linear-gradient(135deg, var(--quantum-purple), var(--quantum-cyan));
+  background: var(--quantum-purple);
 }
 
 .orientation-btn {
