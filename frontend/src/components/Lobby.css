@@ -84,7 +84,7 @@
   border: none;
   cursor: pointer;
   font-family: var(--font-heading);
-  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 8px 30px var(--shadow-glow-primary);
   transition: all var(--transition-normal);
   position: relative;
   overflow: hidden;
@@ -92,7 +92,7 @@
 
 .find-match-btn:hover {
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 12px 40px rgba(139, 92, 246, 0.6);
+  box-shadow: 0 12px 40px var(--shadow-glow-primary);
 }
 
 .find-match-btn:active {
