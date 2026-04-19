@@ -18,7 +18,7 @@ function generateParticles(count: number) {
       delay: `${(i * 1.3) % 8}s`,
       duration: `${8 + (i * 2.1) % 12}s`,
       size: `${3 + (i % 3)}px`,
-      isPurple: i % 2 === 0,
+      isPrimary: i % 2 === 0,
     });
   }
   return particles;
@@ -48,7 +48,7 @@ export default function LoginScreen({ onLogin, onSignup, error, loading }: Login
         {particles.map((p) => (
           <div
             key={p.id}
-            className={`particle ${p.isPurple ? 'particle-purple' : 'particle-cyan'}`}
+            className={`particle ${p.isPrimary ? 'particle-primary' : 'particle-secondary'}`}
             style={{
               left: p.left,
               animationDelay: p.delay,

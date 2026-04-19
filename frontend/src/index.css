@@ -13,16 +13,16 @@
   --bg-elevated: #3c3c3c;
   --bg-surface-glass: rgba(45, 45, 45, 0.8);
 
-  /* Quantum Purple — primary accent */
-  --quantum-purple: #8b5cf6;
-  --quantum-purple-dim: rgba(139, 92, 246, 0.15);
-  --quantum-purple-glow: rgba(139, 92, 246, 0.4);
-  --quantum-purple-vivid: #a78bfa;
+  /* Accent Colors — Primary (Electric Blue) */
+  --accent-primary: #3b82f6;
+  --accent-dim: rgba(59, 130, 246, 0.15);
+  --accent-glow: rgba(59, 130, 246, 0.4);
+  --accent-vivid: #93c5fd;
 
-  /* Quantum Cyan — secondary accent */
-  --quantum-cyan: #06b6d4;
-  --quantum-cyan-dim: rgba(6, 182, 212, 0.15);
-  --quantum-cyan-glow: rgba(6, 182, 212, 0.4);
+  /* Accent Colors — Secondary (Neon Cyan) */
+  --accent-secondary: #22d3ee;
+  --accent-secondary-dim: rgba(34, 211, 238, 0.15);
+  --accent-secondary-glow: rgba(34, 211, 238, 0.4);
 
   /* Game states */
   --color-hit: #ef4444;
@@ -36,24 +36,24 @@
   --color-ghost-glow: rgba(245, 158, 11, 0.4);
 
   /* Superposition shimmer */
-  --super-a: #8b5cf6;
-  --super-b: #06b6d4;
+  --super-a: var(--accent-primary);
+  --super-b: var(--accent-secondary);
 
   /* Text */
   --text-primary: #f1f5f9;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
-  --text-accent: #c4b5fd;
+  --text-accent: var(--accent-vivid);
 
   /* Borders */
   --border-primary: #333333;
-  --border-accent: rgba(139, 92, 246, 0.3);
-  --border-grid: rgba(139, 92, 246, 0.12);
+  --border-accent: rgba(59, 130, 246, 0.3);
+  --border-grid: rgba(59, 130, 246, 0.12);
 
   /* Misc */
   --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.5);
-  --shadow-glow-purple: 0 0 30px rgba(139, 92, 246, 0.3);
-  --shadow-glow-cyan: 0 0 30px rgba(6, 182, 212, 0.3);
+  --shadow-glow-primary: 0 0 30px var(--accent-glow);
+  --shadow-glow-secondary: 0 0 30px var(--accent-secondary-glow);
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
@@ -127,11 +127,11 @@ h4 { font-size: 1rem; }
 p { color: var(--text-secondary); }
 
 a {
-  color: var(--quantum-purple-vivid);
+  color: var(--accent-vivid);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
-a:hover { color: var(--quantum-cyan); }
+a:hover { color: var(--accent-secondary); }
 
 /* ── Buttons ────────────────────────────────────────────────────────── */
 
@@ -153,9 +153,9 @@ a:hover { color: var(--quantum-cyan); }
 }
 
 .btn-primary {
-  background: var(--quantum-purple);
+  background: var(--accent-primary);
   color: white;
-  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 4px 15px var(--accent-glow);
 }
 .btn-primary:hover {
   transform: translateY(-2px);
@@ -172,7 +172,7 @@ a:hover { color: var(--quantum-cyan); }
 }
 .btn-secondary:hover {
   background: var(--bg-surface-hover);
-  border-color: var(--quantum-purple);
+  border-color: var(--accent-primary);
 }
 
 .btn-danger {
@@ -212,8 +212,8 @@ a:hover { color: var(--quantum-cyan); }
 }
 
 .input:focus {
-  border-color: var(--quantum-purple);
-  box-shadow: 0 0 0 3px var(--quantum-purple-dim);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-dim);
 }
 
 .input::placeholder {
@@ -231,7 +231,7 @@ a:hover { color: var(--quantum-cyan); }
 }
 
 .card-glow {
-  box-shadow: var(--shadow-glow-purple);
+  box-shadow: var(--shadow-glow-primary);
 }
 
 /* ── Animations ─────────────────────────────────────────────────────── */
@@ -248,8 +248,8 @@ a:hover { color: var(--quantum-cyan); }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 8px var(--quantum-purple-glow); }
-  50% { box-shadow: 0 0 20px var(--quantum-purple-glow); }
+  0%, 100% { box-shadow: 0 0 8px var(--accent-glow); }
+  50% { box-shadow: 0 0 20px var(--accent-glow); }
 }
 
 @keyframes hit-flash {
@@ -313,7 +313,7 @@ a:hover { color: var(--quantum-cyan); }
 .text-center { text-align: center; }
 .text-muted { color: var(--text-muted); }
 .text-accent { color: var(--text-accent); }
-.text-cyan { color: var(--quantum-cyan); }
+.text-cyan { color: var(--accent-secondary); }
 .text-hit { color: var(--color-hit); }
 .text-miss { color: var(--color-miss); }
 .text-ghost { color: var(--color-ghost); }
@@ -338,5 +338,5 @@ a:hover { color: var(--quantum-cyan); }
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--quantum-purple);
+  background: var(--accent-primary);
 }

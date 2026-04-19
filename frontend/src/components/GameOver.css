@@ -47,7 +47,7 @@
 }
 
 .game-over-win .game-over-title {
-  color: var(--quantum-purple-vivid);
+  color: var(--accent-vivid);
 }
 
 .game-over-loss .game-over-title {
@@ -82,7 +82,7 @@
   font-family: var(--font-heading);
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--quantum-purple-vivid);
+  color: var(--accent-vivid);
 }
 
 .game-over-stat-label {

@@ -37,7 +37,7 @@
 }
 
 .turn-orb-active {
-  background: var(--quantum-purple);
+  background: var(--accent-primary);
   animation: pulse-glow 1.5s ease-in-out infinite;
 }
 
@@ -52,7 +52,7 @@
 }
 
 .turn-text-active {
-  color: var(--quantum-purple-vivid);
+  color: var(--accent-vivid);
 }
 
 .turn-text-waiting {
@@ -124,8 +124,8 @@
 }
 
 .tracker-cell-quantum {
-  background: var(--quantum-purple-dim);
-  border-color: var(--quantum-purple);
+  background: var(--accent-dim);
+  border-color: var(--accent-primary);
   animation: quantum-shimmer 2s ease-in-out infinite;
   background-size: 200% 200%;
 }

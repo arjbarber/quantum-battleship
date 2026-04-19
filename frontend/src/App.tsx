@@ -489,8 +489,8 @@ export default function App() {
           )}
           {placementLocked && (
             <div className="status-message" style={{
-              background: 'var(--quantum-purple-dim)',
-              color: 'var(--quantum-purple-vivid)',
+              background: 'var(--accent-dim)',
+              color: 'var(--accent-vivid)',
               border: '1px solid var(--border-accent)',
               marginBottom: 16,
               justifyContent: 'center',

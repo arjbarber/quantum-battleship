@@ -286,8 +286,8 @@ export default function ShipPlacer({ onPlaceShips, disabled = false }: ShipPlace
             {placementMode === 'superposition' && (
               <div className="quantum-instruction">
                 {superPhase === 'a'
-                  ? '🟣 Click to place Position A (purple)'
-                  : '🔵 Click to place Position B (cyan)'}
+                  ? '🔵 Click to place Position A (blue)'
+                  : '💎 Click to place Position B (cyan)'}
               </div>
             )}
           </div>

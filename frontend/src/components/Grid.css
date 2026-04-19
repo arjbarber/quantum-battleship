@@ -10,7 +10,7 @@
   border: 1px solid var(--border-accent);
   border-radius: var(--radius-lg);
   padding: 4px;
-  box-shadow: var(--shadow-glow-purple);
+  box-shadow: var(--shadow-glow-primary);
 }
 
 /* Column labels (1-10) */
@@ -70,9 +70,9 @@
 }
 
 .grid-cell-interactive:hover {
-  background: var(--quantum-purple-dim);
-  border-color: var(--quantum-purple);
-  box-shadow: inset 0 0 12px var(--quantum-purple-glow);
+  background: var(--accent-dim);
+  border-color: var(--accent-primary);
+  box-shadow: inset 0 0 12px var(--accent-glow);
 }
 
 /* ── Cell States ────────────────────────────────────────────────────── */

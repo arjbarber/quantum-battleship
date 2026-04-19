@@ -8,7 +8,7 @@ export type CellState =
   | 'hit'
   | 'miss'
   | 'sunk'
-  | 'superposition-a'  // purple shimmer
+  | 'superposition-a'  // blue shimmer
   | 'superposition-b'  // cyan shimmer
   | 'quantum-ghost';
 
@@ -145,6 +145,7 @@ export default function Grid({
                   data-y={cell.y}
                   id={`cell-${isOpponent ? 'opp' : 'own'}-${cell.x}-${cell.y}`}
                 >
+
                   <CellContent state={cell.state} />
                 </div>
               );

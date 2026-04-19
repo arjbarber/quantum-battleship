@@ -32,7 +32,7 @@
   font-family: var(--font-heading);
   font-size: 1.4rem;
   font-weight: 700;
-  color: var(--quantum-purple-vivid);
+  color: var(--accent-vivid);
 }
 
 .placer-subtitle {
@@ -62,14 +62,14 @@
 }
 
 .ship-item:hover {
-  border-color: var(--quantum-purple);
+  border-color: var(--accent-primary);
   background: var(--bg-surface-hover);
 }
 
 .ship-item-selected {
-  border-color: var(--quantum-purple);
-  background: var(--quantum-purple-dim);
-  box-shadow: 0 0 12px var(--quantum-purple-glow);
+  border-color: var(--accent-primary);
+  background: var(--accent-dim);
+  box-shadow: 0 0 12px var(--accent-glow);
 }
 
 .ship-item-placed {
@@ -161,7 +161,7 @@
 }
 
 .mode-btn-quantum.mode-btn-active {
-  background: var(--quantum-purple);
+  background: var(--accent-primary);
 }
 
 .orientation-btn {
@@ -177,17 +177,17 @@
 }
 
 .orientation-btn:hover {
-  border-color: var(--quantum-purple);
+  border-color: var(--accent-primary);
   color: var(--text-primary);
 }
 
 .quantum-instruction {
   font-size: 0.8rem;
-  color: var(--quantum-cyan);
+  color: var(--accent-secondary);
   font-style: italic;
   text-align: center;
   padding: 8px;
-  background: var(--quantum-cyan-dim);
+  background: var(--accent-secondary-dim);
   border-radius: var(--radius-sm);
 }
 
