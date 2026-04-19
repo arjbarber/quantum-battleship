@@ -16,7 +16,7 @@
 .game-over-card {
   text-align: center;
   padding: 48px;
-  background: rgba(20, 26, 46, 0.85);
+  background: var(--bg-surface-glass);
   backdrop-filter: blur(20px);
   border-radius: var(--radius-xl);
   max-width: 500px;

@@ -6,11 +6,12 @@
 
 :root {
   /* Background & Surface */
-  --bg-primary: #0a0e1a;
-  --bg-secondary: #0f1424;
-  --bg-surface: #141a2e;
-  --bg-surface-hover: #1a2240;
-  --bg-elevated: #1e2744;
+  --bg-primary: #1e1e1e;
+  --bg-secondary: #252526;
+  --bg-surface: #2d2d2d;
+  --bg-surface-hover: #333333;
+  --bg-elevated: #3c3c3c;
+  --bg-surface-glass: rgba(45, 45, 45, 0.8);
 
   /* Quantum Purple — primary accent */
   --quantum-purple: #8b5cf6;
@@ -45,7 +46,7 @@
   --text-accent: #c4b5fd;
 
   /* Borders */
-  --border-primary: #1e293b;
+  --border-primary: #333333;
   --border-accent: rgba(139, 92, 246, 0.3);
   --border-grid: rgba(139, 92, 246, 0.12);
 
@@ -222,7 +223,7 @@ a:hover { color: var(--quantum-cyan); }
 /* ── Glass Card ─────────────────────────────────────────────────────── */
 
 .card {
-  background: rgba(20, 26, 46, 0.8);
+  background: var(--bg-surface-glass);
   backdrop-filter: blur(12px);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-lg);

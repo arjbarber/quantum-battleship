@@ -419,7 +419,6 @@ export default function App() {
       {/* Header */}
       <header className="app-header">
         <div className="app-logo">
-          <div className="app-logo-icon">⚛️</div>
           <h1>Quantum Battleship</h1>
         </div>
         <div className="app-header-right">
