@@ -140,6 +140,12 @@
   border-color: rgba(139, 92, 246, 0.5);
 }
 
+.cell-phantom-hit {
+  background: rgba(148, 163, 184, 0.2);
+  border-color: rgba(148, 163, 184, 0.4);
+  filter: grayscale(0.5) opacity(0.6);
+}
+
 .cell-superposition-b {
   background: rgba(6, 182, 212, 0.25);
   animation: quantum-shimmer 2s ease-in-out infinite;

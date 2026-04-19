@@ -9,6 +9,8 @@ interface ShipStatus {
   sunk: boolean;
   isQuantum: boolean;
   collapsed: boolean;
+  hits_a?: boolean[];
+  hits_b?: boolean[];
 }
 
 interface MoveEntry {

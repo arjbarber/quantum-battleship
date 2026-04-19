@@ -180,7 +180,8 @@ def build_board(ships_input: list[dict]) -> list[dict]:
             "positions_b": pos_b,
             "collapsed": placement_type == "classical",
             "collapsed_to": "a" if placement_type == "classical" else None,
-            "hits": [False] * size,
+            "hits_a": [False] * size,
+            "hits_b": [False] * size if placement_type == "superposition" else None,
             "sunk": False,
         })
 
@@ -196,18 +197,7 @@ def process_attack(
 ) -> dict:
     """
     Process an attack at coordinate (x, y) against a player's board.
-
-    If the coordinate is part of a superposed ship, the quantum circuit
-    fires and collapses the wave function.
-
-    Returns:
-        {
-            "result": "miss" | "hit" | "quantum_ghost" | "sunk",
-            "ship_name": str | None,
-            "collapsed": bool,         — whether a collapse happened
-            "collapsed_to": "a"|"b"|None,
-            "sunk_ship": str | None,
-        }
+    Supports "Phantom Hits" for quantum ships.
     """
     coord = [x, y]
 
@@ -215,75 +205,74 @@ def process_attack(
         if ship["sunk"]:
             continue
 
+        # Position checks
+        in_a = coord in ship["positions_a"] if ship["positions_a"] else False
+        in_b = coord in ship["positions_b"] if ship["positions_b"] else False
+
+        if not in_a and not in_b:
+            continue
+
+        # ── 1. Handle Observation & Collapse ────────────────────────────────
         if not ship["collapsed"]:
-            # ── Superposed ship ──────────────────────────────────
-            in_a = coord in ship["positions_a"]
-            in_b = coord in ship["positions_b"]
-
-            if not in_a and not in_b:
-                continue  # This shot doesn't interact with this ship
-
-            # Fire the quantum circuit! 🎲
+            from quantum_rng import collapse_superposition
             collapse_result = collapse_superposition()
             ship["collapsed"] = True
             ship["collapsed_to"] = collapse_result
+            # Attacker doesn't learn about the collapse yet!
 
-            # Determine which positions the ship actually occupies
-            actual_positions = (
-                ship["positions_a"] if collapse_result == "a"
-                else ship["positions_b"]
-            )
+        # ── 2. Record the Hit ───────────────────────────────────────────────
+        hit_pos = "a" if in_a else "b"
+        hits_list = ship["hits_a"] if in_a else ship["hits_b"]
+        idx = ship[f"positions_{hit_pos}"].index(coord)
 
-            if coord in actual_positions:
-                # Hit! The ship collapsed HERE
-                idx = actual_positions.index(coord)
-                ship["hits"][idx] = True
-                ship["sunk"] = all(ship["hits"])
+        if hits_list[idx]:
+            # Already hit this phantom or real cell
+            return {
+                "result": "miss",
+                "ship_name": None,
+                "collapsed": False,
+                "collapsed_to": None,
+                "sunk_ship": None,
+            }
 
-                return {
-                    "result": "sunk" if ship["sunk"] else "hit",
-                    "ship_name": ship["name"],
-                    "collapsed": True,
-                    "collapsed_to": collapse_result,
-                    "sunk_ship": ship["name"] if ship["sunk"] else None,
-                }
-            else:
-                # Quantum Ghost — the ship is NOT here, it collapsed
-                # to the other position
+        hits_list[idx] = True
+
+        # ── 3. Check for Real vs Phantom Reveal ─────────────────────────────
+        is_real_pos = (hit_pos == ship["collapsed_to"])
+        
+        # Real Sunk Check
+        real_hits = ship["hits_a"] if ship["collapsed_to"] == "a" else ship["hits_b"]
+        ship["sunk"] = all(real_hits)
+
+        if ship["sunk"]:
+            return {
+                "result": "sunk",
+                "ship_name": ship["name"],
+                "collapsed": True,
+                "collapsed_to": ship["collapsed_to"],
+                "sunk_ship": ship["name"],
+            }
+
+        # Phantom Sunk Check (Ghost Reveal)
+        # If they hit the entire phantom ship, reveal it was a ghost
+        if not is_real_pos:
+            if all(hits_list): # Entire phantom is hit
                 return {
                     "result": "quantum_ghost",
                     "ship_name": ship["name"],
                     "collapsed": True,
-                    "collapsed_to": collapse_result,
+                    "collapsed_to": ship["collapsed_to"],
                     "sunk_ship": None,
                 }
 
-        else:
-            # ── Already collapsed (classical or previously observed) ──
-            actual_positions = (
-                ship["positions_a"] if ship["collapsed_to"] == "a"
-                else ship["positions_b"]
-            )
-            if coord in actual_positions:
-                idx = actual_positions.index(coord)
-                if ship["hits"][idx]:
-                    # Already hit this cell — treat as a miss (wasted shot)
-                    return {
-                        "result": "miss",
-                        "ship_name": None,
-                        "collapsed": False,
-                        "collapsed_to": None,
-                        "sunk_ship": None,
-                    }
-                ship["hits"][idx] = True
-                ship["sunk"] = all(ship["hits"])
-                return {
-                    "result": "sunk" if ship["sunk"] else "hit",
-                    "ship_name": ship["name"],
-                    "collapsed": False,
-                    "collapsed_to": ship["collapsed_to"],
-                    "sunk_ship": ship["name"] if ship["sunk"] else None,
-                }
+        # Standard Hit (Real or Phantom — attacker can't tell!)
+        return {
+            "result": "hit",
+            "ship_name": ship["name"],
+            "collapsed": False, # Hide collapse status until sunk or ghost reveal
+            "collapsed_to": None,
+            "sunk_ship": None,
+        }
 
     # No ship at this coordinate
     return {

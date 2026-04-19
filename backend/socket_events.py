@@ -136,18 +136,14 @@ def register_events(socketio: SocketIO, game_manager: GameManager, supabase):
             emit("error", {"message": result.get("error", "Invalid move")})
             return
 
-        # Send result to the attacker (SANITIZED - hide quantum info)
-        attacker_result = result["result"]
-        if attacker_result == "quantum_ghost":
-            attacker_result = "miss"
-
+        # Send result to the attacker
         emit("fire_result", {
             "x": x,
             "y": y,
-            "result": attacker_result,
+            "result": result["result"],
             "ship_name": result.get("ship_name"),
-            "collapsed": False, # Hide collapse status from attacker
-            "collapsed_to": None,
+            "collapsed": result.get("collapsed", False),
+            "collapsed_to": result.get("collapsed_to"),
             "sunk_ship": result.get("sunk_ship"),
             "game_over": result.get("game_over", False),
             "winner_id": result.get("winner_id"),

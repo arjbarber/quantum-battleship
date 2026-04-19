@@ -17,10 +17,12 @@ type GamePhase = 'login' | 'lobby' | 'searching' | 'placing' | 'playing' | 'game
 interface ShipStatus {
   name: string;
   size: number;
-  hits: boolean[];
+  hits: boolean[]; // For tracked view (attacker)
   sunk: boolean;
   isQuantum: boolean;
   collapsed: boolean;
+  hits_a?: boolean[]; // For defender view
+  hits_b?: boolean[]; // For defender view
 }
 
 interface MoveEntry {
@@ -49,11 +51,11 @@ interface GameState {
 
 // Default ship list for opponent tracking (before we know hits)
 const DEFAULT_SHIP_LIST: ShipStatus[] = [
-  { name: 'Carrier', size: 5, hits: Array(5).fill(false), sunk: false, isQuantum: false, collapsed: true },
-  { name: 'Battleship', size: 4, hits: Array(4).fill(false), sunk: false, isQuantum: false, collapsed: true },
-  { name: 'Cruiser', size: 3, hits: Array(3).fill(false), sunk: false, isQuantum: false, collapsed: true },
-  { name: 'Submarine', size: 3, hits: Array(3).fill(false), sunk: false, isQuantum: false, collapsed: true },
-  { name: 'Destroyer', size: 2, hits: Array(2).fill(false), sunk: false, isQuantum: false, collapsed: true },
+  { name: 'Carrier', size: 5, hits: Array(5).fill(false), sunk: false, isQuantum: false, collapsed: true, hits_a: Array(5).fill(false) },
+  { name: 'Battleship', size: 4, hits: Array(4).fill(false), sunk: false, isQuantum: false, collapsed: true, hits_a: Array(4).fill(false) },
+  { name: 'Cruiser', size: 3, hits: Array(3).fill(false), sunk: false, isQuantum: false, collapsed: true, hits_a: Array(3).fill(false) },
+  { name: 'Submarine', size: 3, hits: Array(3).fill(false), sunk: false, isQuantum: false, collapsed: true, hits_a: Array(3).fill(false) },
+  { name: 'Destroyer', size: 2, hits: Array(2).fill(false), sunk: false, isQuantum: false, collapsed: true, hits_a: Array(2).fill(false) },
 ];
 
 // ── App ──────────────────────────────────────────────────────────────────
@@ -194,7 +196,9 @@ export default function App() {
       });
 
       // Show result notification
-      if (data.result === 'sunk') {
+      if (data.result === 'quantum_ghost') {
+        setLastResult(`👻 Quantum Ghost! ${data.ship_name} was a phantom!`);
+      } else if (data.result === 'sunk') {
         setLastResult(`☠️ Sunk ${data.ship_name}!`);
       } else if (data.result === 'hit') {
         setLastResult(`💥 Hit!`);
@@ -220,29 +224,36 @@ export default function App() {
           // Rebuild own board from server state
           newMyBoard = createEmptyGrid();
           for (const ship of data.board_state) {
-            const positions = ship.collapsed_to === 'b' ? ship.positions_b : ship.positions_a;
-            if (!positions) continue;
-            for (let i = 0; i < positions.length; i++) {
-              const [sx, sy] = positions[i];
-              if (ship.sunk) {
-                newMyBoard[sy][sx].state = 'sunk';
-              } else if (ship.hits[i]) {
-                newMyBoard[sy][sx].state = 'hit';
-              } else if (!ship.collapsed && ship.placement_type === 'superposition') {
-                // Show both positions
+            // Position A cells
+            for (let i = 0; i < ship.positions_a.length; i++) {
+              const [sx, sy] = ship.positions_a[i];
+              if (ship.hits_a[i]) {
+                if (ship.collapsed_to === 'a' || !ship.collapsed) {
+                  newMyBoard[sy][sx].state = ship.sunk ? 'sunk' : 'hit';
+                } else {
+                  newMyBoard[sy][sx].state = 'phantom-hit';
+                }
+              } else if (!ship.collapsed) {
                 newMyBoard[sy][sx].state = 'superposition-a';
-              } else {
+              } else if (ship.collapsed_to === 'a') {
                 newMyBoard[sy][sx].state = 'ship';
               }
             }
-            // If ship is collapsed and was superposition, show non-collapsed positions
-            if (ship.placement_type === 'superposition' && !ship.collapsed) {
-              const posB = ship.positions_b;
-              if (posB) {
-                for (const [bx, by] of posB) {
-                  if (newMyBoard[by][bx].state === 'empty') {
-                    newMyBoard[by][bx].state = 'superposition-b';
+
+            // Position B cells (if superposition)
+            if (ship.placement_type === 'superposition' && ship.positions_b) {
+              for (let i = 0; i < ship.positions_b.length; i++) {
+                const [sx, sy] = ship.positions_b[i];
+                if (ship.hits_b[i]) {
+                  if (ship.collapsed_to === 'b' || !ship.collapsed) {
+                    newMyBoard[sy][sx].state = ship.sunk ? 'sunk' : 'hit';
+                  } else {
+                    newMyBoard[sy][sx].state = 'phantom-hit';
                   }
+                } else if (!ship.collapsed) {
+                  newMyBoard[sy][sx].state = 'superposition-b';
+                } else if (ship.collapsed_to === 'b') {
+                  newMyBoard[sy][sx].state = 'ship';
                 }
               }
             }
@@ -252,10 +263,12 @@ export default function App() {
           const newYourShips: ShipStatus[] = data.board_state.map((s: any) => ({
             name: s.name,
             size: s.size,
-            hits: s.hits,
+            hits: s.collapsed_to === 'b' ? s.hits_b : s.hits_a,
             sunk: s.sunk,
             isQuantum: s.placement_type === 'superposition',
             collapsed: s.collapsed,
+            hits_a: s.hits_a,
+            hits_b: s.hits_b,
           }));
 
           const newMove: MoveEntry = {

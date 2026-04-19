@@ -10,7 +10,8 @@ export type CellState =
   | 'sunk'
   | 'superposition-a'  // blue shimmer
   | 'superposition-b'  // cyan shimmer
-  | 'quantum-ghost';
+  | 'quantum-ghost'
+  | 'phantom-hit';
 
 export interface CellData {
   x: number;
@@ -48,6 +49,8 @@ function CellContent({ state }: { state: CellState }) {
       return <span className="cell-sunk-marker">☠️</span>;
     case 'quantum-ghost':
       return <span className="cell-ghost-marker">👻</span>;
+    case 'phantom-hit':
+      return <span className="cell-ghost-marker" style={{ opacity: 0.5 }}>👻💥</span>;
     case 'superposition-a':
     case 'superposition-b':
       return <span style={{ fontSize: '0.7rem', opacity: 0.6 }}>⟨ψ⟩</span>;
@@ -63,9 +66,14 @@ function getCellClass(state: CellState): string {
     case 'miss': return 'cell-miss';
     case 'sunk': return 'cell-sunk';
     case 'superposition-a': return 'cell-superposition-a';
-    case 'superposition-b': return 'cell-superposition-b';
-    case 'quantum-ghost': return 'cell-quantum-ghost';
-    default: return 'cell-empty';
+    case 'superposition-b':
+      return 'cell-superposition cell-superposition-b';
+    case 'quantum-ghost':
+      return 'cell-quantum-ghost';
+    case 'phantom-hit':
+      return 'cell-phantom-hit';
+    default:
+      return 'cell-empty';
   }
 }
 

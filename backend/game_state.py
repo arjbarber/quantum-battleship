@@ -150,7 +150,8 @@ class Game:
                 "positions_b": ship["positions_b"],
                 "collapsed": ship["collapsed"],
                 "collapsed_to": ship["collapsed_to"],
-                "hits": ship["hits"],
+                "hits_a": ship["hits_a"],
+                "hits_b": ship["hits_b"],
                 "sunk": ship["sunk"],
             })
         return board
