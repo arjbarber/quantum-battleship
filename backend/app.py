@@ -70,6 +70,8 @@ def health():
 @app.route("/api/auth/signup", methods=["POST"])
 def signup():
     from flask import request, jsonify
+    from gotrue.errors import AuthApiError
+    
     data = request.get_json()
     email = data.get("email", "")
     password = data.get("password", "")
@@ -78,47 +80,57 @@ def signup():
     if not email or not password or not username:
         return jsonify({"error": "Email, password, and username are required"}), 400
 
+    print(f"[Auth] Attempting signup for: {email} / {username}")
+
     try:
-        # Create user via admin API (bypasses email validation, auto-confirms)
-        # The trigger 'handle_new_user' in SQL will automatically create the profile row
-        # using the 'username' provided in user_metadata.
-        admin_response = supabase.auth.admin.create_user({
-            "email": email,
-            "password": password,
-            "email_confirm": True,
-            "user_metadata": {"username": username},
-        })
+        # 1. Create user via admin API
+        try:
+            admin_response = supabase.auth.admin.create_user({
+                "email": email,
+                "password": password,
+                "email_confirm": True,
+                "user_metadata": {"username": username},
+            })
+            print(f"[Auth] Admin create_user response: {admin_response}")
+        except AuthApiError as e:
+            # If user already exists, we might get an error here.
+            # We check the message to see if we can just proceed to login.
+            if "already registered" in e.message.lower() or "already exists" in e.message.lower():
+                print(f"[Auth] User already exists, proceeding to login.")
+            else:
+                print(f"[Auth] Admin create_user error: {e.message} (Status: {e.status})")
+                return jsonify({"error": f"Supabase Admin Error: {e.message}"}), e.status
+        except Exception as e:
+            print(f"[Auth] Unexpected admin create error: {str(e)}")
+            return jsonify({"error": f"Unexpected Admin Error: {str(e)}"}), 500
 
-        # Note: If user already exists, admin_response.user might be None or error might be set
-        # supabase-py usually returns an error object or raises an exception depending on version
-        # We'll check if user was created or if we can proceed to sign in.
-        user_id = None
-        if admin_response.user:
-            user_id = admin_response.user.id
-        
-        # Now sign in to get session tokens. 
-        # If user creation above failed because they exist, this will still work.
-        login_response = supabase.auth.sign_in_with_password({
-            "email": email,
-            "password": password,
-        })
+        # 2. Sign in to get session tokens
+        try:
+            login_response = supabase.auth.sign_in_with_password({
+                "email": email,
+                "password": password,
+            })
+            print(f"[Auth] Sign-in response received.")
+            
+            if login_response.user is None:
+                return jsonify({"error": "Login failed after signup. Check credentials."}), 401
 
-        if login_response.user is None:
-            return jsonify({"error": "Signup/Login failed. User may already exist with different credentials."}), 400
+            return jsonify({
+                "user_id": login_response.user.id,
+                "email": email,
+                "username": username,
+                "session": {
+                    "access_token": login_response.session.access_token if login_response.session else None,
+                    "refresh_token": login_response.session.refresh_token if login_response.session else None,
+                },
+            }), 201
 
-        user_id = login_response.user.id
-
-        return jsonify({
-            "user_id": user_id,
-            "email": email,
-            "username": username,
-            "session": {
-                "access_token": login_response.session.access_token if login_response.session else None,
-                "refresh_token": login_response.session.refresh_token if login_response.session else None,
-            },
-        }), 201
+        except AuthApiError as e:
+            print(f"[Auth] Sign-in error after signup: {e.message} (Status: {e.status})")
+            return jsonify({"error": f"Login Error: {e.message}"}), e.status
 
     except Exception as e:
+        print(f"[Auth] General Signup Exception: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 
